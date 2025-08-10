@@ -1,40 +1,46 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
-import TaskForm from '../components/TaskForm';
-import TaskList from '../components/TaskList';
+import TicketCreationForm from '../components/TicketCreationForm'; // renamed import to match usage
+import TicketList from '../components/TicketList'; // renamed import to match usage
 import { useAuth } from '../context/AuthContext';
 
-const Tasks = () => {
+const Tickets = () => {
   const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
+  const [tickets, setTickets] = useState([]);
+  const [editingTicket, setEditingTicket] = useState(null);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchTickets = async () => {
+      if (!user || !user.token) return; // wait for user and token
+
       try {
-        const response = await axiosInstance.get('/api/tasks', {
+        const response = await axiosInstance.get('/api/tickets', {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setTasks(response.data);
+        setTickets(response.data);
       } catch (error) {
-        alert('Failed to fetch tasks.');
+        alert('Failed to fetch tickets.');
       }
     };
 
-    fetchTasks();
+    fetchTickets();
   }, [user]);
 
   return (
     <div className="container mx-auto p-6">
-      <TaskForm
-        tasks={tasks}
-        setTasks={setTasks}
-        editingTask={editingTask}
-        setEditingTask={setEditingTask}
+      <TicketCreationForm
+        tickets={tickets}
+        setTickets={setTickets}
+        editingTicket={editingTicket}
+        setEditingTicket={setEditingTicket}
       />
-      <TaskList tasks={tasks} setTasks={setTasks} setEditingTask={setEditingTask} />
+      <TicketList
+        tickets={tickets}
+        setTickets={setTickets}
+        setEditingTicket={setEditingTicket}
+      />
     </div>
   );
 };
 
-export default Tasks;
+export default Tickets;
