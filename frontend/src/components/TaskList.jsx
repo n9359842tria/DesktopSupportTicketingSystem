@@ -17,7 +17,7 @@ const TicketList = ({ tickets, setTickets, setEditingTicket }) => {
 
   return (
     <div>
-      {tickets.map((ticket) => (
+      {(tickets || []).map((ticket) => (
         <div key={ticket._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
           <h2 className="font-bold">{ticket.title}</h2>
           <p>{ticket.description}</p>
