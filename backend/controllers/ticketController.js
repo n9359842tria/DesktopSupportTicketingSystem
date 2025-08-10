@@ -1,55 +1,61 @@
-const Task = require('../models/Task');
-const getTasks = async (
-req,
-res) => {
-try {
-const tasks = await Task.find({ userId: req.user.id });
-res.json(tasks);
-} catch (error) {
-res.status(500).json({ message: error.message });
-}
-}
+const Ticket = require('../models/Ticket');
 
-const addTask = async (
-req,
-res) => {
-const { title, description, deadline } = req.body;
-try {
-const task = await Task.create({ userId: req.user.id, title, description, deadline });
-res.status(201).json(task);
-} catch (error) {
-res.status(500).json({ message: error.message });
-}
+const getTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.find({ userId: req.user.id });
+    res.json(tickets);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-const updateTask = async (
-req,
-res) => {
-const { title, description, completed, deadline } = req.body;
-try {
-const task = await Task.findById(req.params.id);
-if (!task) return res.status(404).json({ message: 'Task not found' });
-task.title = title || task.title;
-task.description = description || task.description;
-task.completed = completed ?? task.completed;
-task.deadline = deadline || task.deadline;
-const updatedTask = await task.save();
-res.json(updatedTask);
-} catch (error) {
-res.status(500).json({ message: error.message });
-}
+const addTicket = async (req, res) => {
+  const { title, description, priority, category, assignedTo } = req.body;
+  try {
+    const ticket = await Ticket.create({
+      userId: req.user.id,
+      title,
+      description,
+      priority,
+      category,
+      assignedTo,
+    });
+    res.status(201).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-const deleteTask = async (
-req,
-res) => {
-try {
-const task = await Task.findById(req.params.id);
-if (!task) return res.status(404).json({ message: 'Task not found' });
-await task.remove();
-res.json({ message: 'Task deleted' });
-} catch (error) {
-res.status(500).json({ message: error.message });
-}
+const updateTicket = async (req, res) => {
+  const { title, description, priority, category, assignedTo, status } = req.body;
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    ticket.title = title || ticket.title;
+    ticket.description = description || ticket.description;
+    ticket.priority = priority || ticket.priority;
+    ticket.category = category || ticket.category;
+    ticket.assignedTo = assignedTo || ticket.assignedTo;
+    ticket.status = status || ticket.status; // e.g. 'open', 'in progress', 'closed'
+
+    const updatedTicket = await ticket.save();
+    res.json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
-module.exports = { getTasks, addTask, updateTask, deleteTask };
+
+const deleteTicket = async (req, res) => {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    await ticket.remove();
+    res.json({ message: 'Ticket deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getTickets, addTicket, updateTicket, deleteTicket };
