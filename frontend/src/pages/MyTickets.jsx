@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axiosConfig from '../axiosConfig';
+import axiosInstance from '../axiosConfig';
 import TicketList from '../components/TicketList';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,7 +13,7 @@ const MyTickets = () => {
 
     const fetchTickets = async () => {
       try {
-        const response = await axiosConfig.get('/api/tickets', {
+        const response = await axiosInstance.get('/api/tickets', {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setTickets(response.data);
@@ -29,8 +29,8 @@ const MyTickets = () => {
 
   const handleStatusChange = async (ticketId, newStatus) => {
     try {
-      await axiosConfig.put(
-        `/api/tickets/${ticketId}`,
+      await axiosInstance.patch(
+        `/api/tickets/${ticketId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
