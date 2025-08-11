@@ -54,14 +54,17 @@ const Navbar = () => {
             onClick={() => setMenuOpen(false)}
           >
             <ul className="py-1 text-gray-700">
-              <li>
-                <button
-                  onClick={handleSearchClick}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-200"
-                >
-                  Service Ticket Search
-                </button>
-              </li>
+              {/* Only show Service Ticket Search if logged in */}
+              {user && (
+                <li>
+                  <button
+                    onClick={handleSearchClick}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-200"
+                  >
+                    Service Ticket Search
+                  </button>
+                </li>
+              )}
 
               {user ? (
                 <>

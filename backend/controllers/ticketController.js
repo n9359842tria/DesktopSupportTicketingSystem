@@ -19,7 +19,9 @@ const getTickets = async (req, res) => {
         ],
       };
     }
-    const tickets = await Ticket.find({ userId: req.user.id });
+
+    const tickets = await Ticket.find(query);
+
     res.json(tickets);
   } catch (error) {
     res.status(500).json({ message: error.message });
