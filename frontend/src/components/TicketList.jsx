@@ -1,6 +1,4 @@
 import React from 'react';
-//import { useAuth } from '../context/AuthContext';
-//import axiosInstance from '../axiosConfig';
 
 const TicketList = ({ tickets }) => {
   if (!tickets || tickets.length === 0) {
@@ -23,19 +21,20 @@ const TicketList = ({ tickets }) => {
               boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
             }}
           >
-            <h3 style={{ marginBottom: '10px' }}>{ticket.title}</h3>
-            <p style={{ marginBottom: '10px' }}>{ticket.description}</p>
-            <p style={{ marginBottom: '6px' }}>
-              <strong>Priority:</strong> {ticket.priority}
+            <p style={{ marginBottom: '10px' }}>
+              <strong>Title:</strong> <span>{ticket.title}</span>
             </p>
             <p style={{ marginBottom: '6px' }}>
-              <strong>Category:</strong> {ticket.category || 'N/A'}
+              <strong>Priority:</strong> <span>{ticket.priority}</span>
+            </p>
+            <p style={{ marginBottom: '10px' }}>
+              <strong>Description:</strong> <span>{ticket.description}</span>
             </p>
             <p style={{ marginBottom: '6px' }}>
-              <strong>Assigned To:</strong> {ticket.assignedTo || 'Unassigned'}
+              <strong>Category:</strong> <span>{ticket.category || 'N/A'}</span>
             </p>
-            <p style={{ fontSize: '0.9em', color: '#666' }}>
-              Created at: {new Date(ticket.createdAt).toLocaleString()}
+            <p style={{ marginBottom: '6px' }}>
+              <strong>Assigned To:</strong> <span>{ticket.assignedTo || 'Unassigned'}</span>
             </p>
           </li>
         ))}
