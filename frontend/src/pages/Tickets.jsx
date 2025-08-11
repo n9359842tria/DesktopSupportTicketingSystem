@@ -9,19 +9,26 @@ const Tickets = () => {
   const [tickets, setTickets] = useState([]);
   const [editingTicket, setEditingTicket] = useState(null);
 
-   useEffect(() => {
-    const fetchTickets = async () => {
-      if (!user || !user.token) return; // wait for user and token
+useEffect(() => {
+  const fetchTickets = async () => {
+    if (!user || !user.token) {
+      console.log('No user or token available — skipping fetch');
+      return;
+    }
 
-      try {
-        const response = await axiosInstance.get('/api/tickets', {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        setTickets(response.data);
-      } catch (error) {
-        alert('Failed to fetch tickets.');
-      }
-    };
+    try {
+      console.log('Fetching tickets with token:', user.token);
+      const response = await axiosInstance.get('/api/tickets', {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      console.log('Tickets fetched successfully:', response.data);
+      setTickets(response.data);
+    } catch (error) {
+      // Log full error object for better visibility
+      console.error('Failed to fetch tickets:', error.response || error.message || error);
+      alert('Failed to fetch tickets.');
+    }
+  };
 
     fetchTickets();
   }, [user]);
