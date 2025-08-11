@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TicketCreationForm from './TicketCreationForm';  // your form component
-import MyTickets from '../pages/MyTickets'; // ticket list component
+import TicketCreationForm from './TicketCreationForm'; // Adjust path as needed
+import MyTickets from '../pages/MyTickets'; // Adjust path as needed
 
 const TicketPage = () => {
   const [tickets, setTickets] = useState([]);
