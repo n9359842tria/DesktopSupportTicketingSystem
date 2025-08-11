@@ -10,7 +10,7 @@ const TicketCreationForm = ({ setTickets }) => {
   const [priority, setPriority] = useState('Medium');
   const [category, setCategory] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');  // <-- added success message state
+  const [successMsg, setSuccessMsg] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,119 +41,93 @@ const TicketCreationForm = ({ setTickets }) => {
     }
   };
 
-  const inputStyle = {
-    width: '100%',
-    padding: '10px',
-    marginTop: '6px',
-    marginBottom: '20px',
-    border: '2px solid #ccc',
-    borderRadius: '5px',
-    fontSize: '16px',
-    boxSizing: 'border-box',
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontWeight: '600',
-    marginBottom: '4px',
-  };
-
-  const formStyle = {
-    maxWidth: '600px',
-    margin: '40px auto',
-    padding: '20px',
-    border: '1px solid #eee',
-    borderRadius: '10px',
-    backgroundColor: '#fafafa',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  };
-
-  const buttonStyle = {
-    padding: '12px 24px',
-    fontSize: '18px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-  };
-
-  const successMsgStyle = {
-    color: 'green',
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: '20px',
-  };
-
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
-      <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Create a New Ticket</h2>
+    <form onSubmit={handleSubmit} className="mx-auto my-5 p-4 border rounded shadow-sm bg-light" style={{ maxWidth: '600px' }}>
+      <h2 className="text-center mb-4">Create a New Ticket</h2>
 
-      {/* Success message */}
-      {successMsg && <p style={successMsgStyle}>{successMsg}</p>}
+      {successMsg && (
+        <div className="alert alert-success text-center" role="alert">
+          {successMsg}
+        </div>
+      )}
 
-      <label style={labelStyle}>
-        Title:
+      <div className="mb-3">
+        <label htmlFor="title" className="form-label fw-semibold">
+          Title:
+        </label>
         <input
+          id="title"
           type="text"
+          className="form-control"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
           placeholder="Enter ticket title"
-          style={inputStyle}
         />
-      </label>
+      </div>
 
-      <label style={labelStyle}>
-        Description:
+      <div className="mb-3">
+        <label htmlFor="description" className="form-label fw-semibold">
+          Description:
+        </label>
         <textarea
+          id="description"
+          className="form-control"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
           placeholder="Describe the issue or request"
           rows={5}
-          style={{ ...inputStyle, resize: 'vertical' }}
         />
-      </label>
+      </div>
 
-      <label style={labelStyle}>
-        Priority:
+      <div className="mb-3">
+        <label htmlFor="priority" className="form-label fw-semibold">
+          Priority:
+        </label>
         <select
+          id="priority"
+          className="form-select"
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
-          style={inputStyle}
         >
           <option>Low</option>
           <option>Medium</option>
           <option>High</option>
           <option>Critical</option>
         </select>
-      </label>
+      </div>
 
-      <label style={labelStyle}>
-        Category:
+      <div className="mb-3">
+        <label htmlFor="category" className="form-label fw-semibold">
+          Category:
+        </label>
         <input
+          id="category"
           type="text"
+          className="form-control"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           placeholder="e.g. Software, Hardware"
-          style={inputStyle}
         />
-      </label>
+      </div>
 
-      <label style={labelStyle}>
-        Assign To:
+      <div className="mb-4">
+        <label htmlFor="assignedTo" className="form-label fw-semibold">
+          Assign To:
+        </label>
         <input
+          id="assignedTo"
           type="text"
+          className="form-control"
           value={assignedTo}
           onChange={(e) => setAssignedTo(e.target.value)}
           placeholder="Assign to staff member"
-          style={inputStyle}
         />
-      </label>
+      </div>
 
-      <div style={{ textAlign: 'center' }}>
-        <button type="submit" style={buttonStyle}>
+      <div className="text-center">
+        <button type="submit" className="btn btn-primary px-4">
           Create Ticket
         </button>
       </div>
