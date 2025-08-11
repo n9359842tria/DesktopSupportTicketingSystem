@@ -2,11 +2,24 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
 import { useAuth } from '../context/AuthContext';
 
+const ALL_COLUMNS = [
+  { key: 'title', label: 'Title' },
+  { key: 'description', label: 'Description' },
+  { key: 'priority', label: 'Priority' },
+  { key: 'category', label: 'Category' },
+  { key: 'assignedTo', label: 'Assigned To' },
+];
+
 const SearchResults = () => {
   const { user } = useAuth();
   const [tickets, setTickets] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredTickets, setFilteredTickets] = useState([]);
+
+  // State to track which columns are visible
+  const [visibleColumns, setVisibleColumns] = useState(
+    ALL_COLUMNS.reduce((acc, col) => ({ ...acc, [col.key]: true }), {})
+  );
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -28,7 +41,6 @@ const SearchResults = () => {
 
   useEffect(() => {
     const filtered = tickets.filter((ticket) =>
-      // filter by any field you want, here by title or description (case-insensitive)
       ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ticket.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (ticket.priority && ticket.priority.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -38,9 +50,18 @@ const SearchResults = () => {
     setFilteredTickets(filtered);
   }, [searchTerm, tickets]);
 
+  const toggleColumn = (key) => {
+    setVisibleColumns((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Service Ticket Search</h1>
+
+      {/* Search input */}
       <input
         type="text"
         placeholder="Search tickets..."
@@ -49,31 +70,49 @@ const SearchResults = () => {
         className="form-control mb-4 p-2 border rounded w-full max-w-lg"
       />
 
+      {/* Column filter checkboxes */}
+      <div className="mb-4 flex flex-wrap gap-4">
+        {ALL_COLUMNS.map(({ key, label }) => (
+          <label key={key} className="inline-flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={visibleColumns[key]}
+              onChange={() => toggleColumn(key)}
+              className="form-checkbox"
+            />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
+
+      {/* Tickets table */}
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2">Title</th>
-            <th className="border border-gray-300 px-4 py-2">Description</th>
-            <th className="border border-gray-300 px-4 py-2">Priority</th>
-            <th className="border border-gray-300 px-4 py-2">Category</th>
-            <th className="border border-gray-300 px-4 py-2">Assigned To</th>
+            {ALL_COLUMNS.map(({ key, label }) =>
+              visibleColumns[key] ? (
+                <th key={key} className="border border-gray-300 px-4 py-2">{label}</th>
+              ) : null
+            )}
           </tr>
         </thead>
         <tbody>
           {filteredTickets.length === 0 ? (
             <tr>
-              <td colSpan="5" className="text-center p-4">
+              <td colSpan={ALL_COLUMNS.filter(col => visibleColumns[col.key]).length} className="text-center p-4">
                 No tickets found.
               </td>
             </tr>
           ) : (
             filteredTickets.map((ticket) => (
               <tr key={ticket._id} className="hover:bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2">{ticket.title}</td>
-                <td className="border border-gray-300 px-4 py-2">{ticket.description}</td>
-                <td className="border border-gray-300 px-4 py-2">{ticket.priority}</td>
-                <td className="border border-gray-300 px-4 py-2">{ticket.category || 'N/A'}</td>
-                <td className="border border-gray-300 px-4 py-2">{ticket.assignedTo || 'Unassigned'}</td>
+                {ALL_COLUMNS.map(({ key }) =>
+                  visibleColumns[key] ? (
+                    <td key={key} className="border border-gray-300 px-4 py-2">
+                      {ticket[key] || (key === 'assignedTo' ? 'Unassigned' : 'N/A')}
+                    </td>
+                  ) : null
+                )}
               </tr>
             ))
           )}
