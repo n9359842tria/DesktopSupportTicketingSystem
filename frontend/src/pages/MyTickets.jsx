@@ -6,13 +6,12 @@ import { useAuth } from '../context/AuthContext';
 const MyTickets = () => {
   const { user } = useAuth();
   const [tickets, setTickets] = useState([]);
-  //const [loading, setLoading] = useState(true);  // add loading state
-  //const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTickets = async () => {
-      if (!user || !user.token) return;
+    if (!user || !user.token) return;
 
+    const fetchTickets = async () => {
       try {
         const response = await axiosInstance.get('/api/tickets', {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -20,11 +19,17 @@ const MyTickets = () => {
         setTickets(response.data);
       } catch (error) {
         alert('Failed to fetch tickets.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchTickets();
   }, [user]);
+
+  if (loading) {
+    return <p className="text-center mt-6">Loading tickets...</p>;
+  }
 
   return (
     <div className="container mx-auto p-6">
