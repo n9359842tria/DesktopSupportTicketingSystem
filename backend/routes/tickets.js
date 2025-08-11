@@ -1,9 +1,9 @@
-console.log('Ticket model:', Ticket);
-
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
 const { protect } = require('../middleware/authMiddleware'); // adjust path if needed
+
+console.log('Ticket model:', Ticket);
 
 // GET /api/tickets - get tickets created by logged-in user
 router.get('/', protect, async (req, res) => {
