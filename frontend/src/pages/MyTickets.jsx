@@ -1,6 +1,3 @@
-import TicketCreationForm from '../components/TicketCreationForm'; // renamed import to match usage
-import TicketList from '../components/TicketList'; // renamed import to match usage
-
 const MyTickets = ({ tickets }) => {
   if (!tickets) return <p>Loading tickets...</p>;
 
@@ -9,17 +6,26 @@ const MyTickets = ({ tickets }) => {
   }
 
   return (
-    <div>
+    <div style={{ maxWidth: '800px', margin: '40px auto' }}>
       <h2>My Tickets</h2>
-      <ul>
-        {tickets.map(ticket => (
-          <li key={ticket._id} style={{ borderBottom: '1px solid #ccc', padding: '10px 0' }}>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {tickets.map((ticket) => (
+          <li
+            key={ticket._id}
+            style={{
+              borderBottom: '1px solid #ccc',
+              padding: '15px 0',
+            }}
+          >
             <h3>{ticket.title}</h3>
             <p>{ticket.description}</p>
             <p>
-              <strong>Status:</strong> {ticket.status} | <strong>Priority:</strong> {ticket.priority}
+              <strong>Status:</strong> {ticket.status || 'Open'} |{' '}
+              <strong>Priority:</strong> {ticket.priority || 'Normal'}
             </p>
-            <p><small>Created At: {new Date(ticket.createdAt).toLocaleString()}</small></p>
+            <p>
+              <small>Created At: {new Date(ticket.createdAt).toLocaleString()}</small>
+            </p>
           </li>
         ))}
       </ul>
