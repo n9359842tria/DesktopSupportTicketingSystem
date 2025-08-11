@@ -1,9 +1,11 @@
 import React from 'react';
 
-const TicketList = ({ tickets }) => {
+const TicketList = ({ tickets, onStatusChange }) => {
   if (!tickets || tickets.length === 0) {
     return <p style={{ textAlign: 'center', marginTop: '40px' }}>No tickets found.</p>;
   }
+
+  const statuses = ['Open', 'In Progress', 'Completed', 'Closed'];
 
   return (
     <div style={{ maxWidth: '800px', margin: '40px auto' }}>
@@ -35,6 +37,19 @@ const TicketList = ({ tickets }) => {
             </p>
             <p style={{ marginBottom: '6px' }}>
               <strong>Assigned To:</strong> <span>{ticket.assignedTo || 'Unassigned'}</span>
+            </p>
+            <p style={{ marginTop: '10px' }}>
+              <strong>Status:</strong>{' '}
+              <select
+                value={ticket.status || 'Open'}
+                onChange={(e) => onStatusChange(ticket._id, e.target.value)}
+              >
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
             </p>
           </li>
         ))}

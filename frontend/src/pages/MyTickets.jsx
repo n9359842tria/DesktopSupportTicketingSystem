@@ -27,6 +27,24 @@ const MyTickets = () => {
     fetchTickets();
   }, [user]);
 
+  const handleStatusChange = async (ticketId, newStatus) => {
+    try {
+      await axiosInstance.patch(
+        `/api/tickets/${ticketId}/status`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+
+      setTickets((prevTickets) =>
+        prevTickets.map((ticket) =>
+          ticket._id === ticketId ? { ...ticket, status: newStatus } : ticket
+        )
+      );
+    } catch (error) {
+      alert('Failed to update ticket status.');
+    }
+  };
+
   if (loading) {
     return <p className="text-center mt-6">Loading tickets...</p>;
   }
@@ -34,7 +52,7 @@ const MyTickets = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">My Tickets</h1>
-      <TicketList tickets={tickets} />
+      <TicketList tickets={tickets} onStatusChange={handleStatusChange} />
     </div>
   );
 };
