@@ -9,7 +9,7 @@ const Tickets = () => {
   const [tickets, setTickets] = useState([]);
   const [editingTicket, setEditingTicket] = useState(null);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchTickets = async () => {
       if (!user || !user.token) return; // wait for user and token
 
