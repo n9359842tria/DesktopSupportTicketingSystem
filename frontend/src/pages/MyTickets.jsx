@@ -1,3 +1,6 @@
+import TicketCreationForm from '../components/TicketCreationForm'; // renamed import to match usage
+import TicketList from '../components/TicketList'; // renamed import to match usage
+
 const MyTickets = ({ tickets }) => {
   if (!tickets) return <p>Loading tickets...</p>;
 
