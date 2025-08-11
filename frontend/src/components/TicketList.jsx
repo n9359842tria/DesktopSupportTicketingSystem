@@ -1,5 +1,6 @@
-import { useAuth } from '../context/AuthContext';
-import axiosInstance from '../axiosConfig';
+import React from 'react';
+//import { useAuth } from '../context/AuthContext';
+//import axiosInstance from '../axiosConfig';
 
 const TicketList = ({ tickets }) => {
   if (!tickets || tickets.length === 0) {
