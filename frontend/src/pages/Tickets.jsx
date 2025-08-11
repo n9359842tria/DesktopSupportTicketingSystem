@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
 import TicketCreationForm from '../components/TicketCreationForm'; // renamed import to match usage
-//import TicketList from '../components/TicketList'; // renamed import to match usage
+import TicketList from '../components/TicketList'; // renamed import to match usage
 import { useAuth } from '../context/AuthContext';
 
 const Tickets = () => {
@@ -27,13 +27,9 @@ const Tickets = () => {
   }, [user]);
 
   return (
-    <div className="container mx-auto p-6">
-      <TicketCreationForm
-        setTickets={setTickets}
-        editingTicket={editingTicket}
-        setEditingTicket={setEditingTicket}
-      />
-
+      <div className="container mx-auto p-6">
+      <TicketCreationForm setTickets={setTickets} editingTicket={editingTicket} setEditingTicket={setEditingTicket} />
+      <TicketList tickets={tickets} />
     </div>
   );
 };
