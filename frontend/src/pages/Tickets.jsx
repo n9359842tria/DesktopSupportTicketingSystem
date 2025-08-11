@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
 import TicketCreationForm from '../components/TicketCreationForm'; // renamed import to match usage
-import TicketList from '../components/TicketList'; // renamed import to match usage
+//import TicketList from '../components/TicketList'; // renamed import to match usage
 import { useAuth } from '../context/AuthContext';
 
 const Tickets = () => {
@@ -33,11 +33,7 @@ const Tickets = () => {
         editingTicket={editingTicket}
         setEditingTicket={setEditingTicket}
       />
-      <TicketList
-        tickets={tickets}
-        setTickets={setTickets}
-        setEditingTicket={setEditingTicket}
-      />
+
     </div>
   );
 };

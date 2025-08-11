@@ -2,7 +2,7 @@ console.log('Ticket model:', Ticket);
 
 const express = require('express');
 const router = express.Router();
-//const Ticket = require('../models/Ticket');
+const Ticket = require('../models/Ticket');
 const { protect } = require('../middleware/authMiddleware'); // adjust path if needed
 
 // GET /api/tickets - get tickets created by logged-in user
@@ -10,6 +10,7 @@ router.get('/', protect, async (req, res) => {
   try {
     // req.user is the full user document without password
     const userId = req.user._id;
+    console.log(userId)
     const tickets = await Ticket.find({ createdBy: userId }).sort({ createdAt: -1 });
     res.json(tickets);
   } catch (error) {
@@ -22,6 +23,7 @@ router.get('/', protect, async (req, res) => {
 router.post('/', protect, async (req, res) => {
   try {
     const { title, description, priority, category, assignedTo } = req.body;
+    console.log(title)
 
     const ticket = new Ticket({
       title,
