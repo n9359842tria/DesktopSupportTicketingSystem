@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
-//app.use('/api/tickets', require('./routes/tickets'));
+// app.use('/api/tickets', require('./routes/tickets'));
 
 // Export the app object for testing
 if (require.main === module) {
@@ -24,3 +24,9 @@ if (require.main === module) {
 
 
 module.exports = app
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something broke!', error: err.message });
+});
