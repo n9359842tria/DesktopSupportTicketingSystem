@@ -10,6 +10,7 @@ const TicketCreationForm = ({ setTickets }) => {
   const [priority, setPriority] = useState('Medium');
   const [category, setCategory] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');  // <-- added success message state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,12 +24,11 @@ const TicketCreationForm = ({ setTickets }) => {
         assignedTo,
       };
 
-      const response = await axiosInstance.post('/api/tickets', newTicket, {
+      await axiosInstance.post('/api/tickets', newTicket, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
 
-      // Add the created ticket to tickets list state
-      setTickets((prev) => [response.data, ...prev]);
+      setSuccessMsg('Ticket created successfully! You can see it in My Tickets.');
 
       // Reset form fields
       setTitle('');
@@ -78,9 +78,19 @@ const TicketCreationForm = ({ setTickets }) => {
     cursor: 'pointer',
   };
 
+  const successMsgStyle = {
+    color: 'green',
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: '20px',
+  };
+
   return (
     <form onSubmit={handleSubmit} style={formStyle}>
       <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Create a New Ticket</h2>
+
+      {/* Success message */}
+      {successMsg && <p style={successMsgStyle}>{successMsg}</p>}
 
       <label style={labelStyle}>
         Title:
