@@ -1,30 +1,44 @@
 import { useState } from 'react';
+import axiosInstance from '../axiosConfig';
+import { useAuth } from '../context/AuthContext';
 
-const TicketCreationForm = () => {
+const TicketCreationForm = ({ setTickets }) => {
+  const { user } = useAuth();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [category, setCategory] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const ticketData = {
-      title,
-      description,
-      priority,
-      category,
-      assignedTo,
-    };
+    try {
+      const newTicket = {
+        title,
+        description,
+        priority,
+        category,
+        assignedTo,
+      };
 
-    console.log('Submitting ticket:', ticketData);
+      const response = await axiosInstance.post('/api/tickets', newTicket, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
 
-    setTitle('');
-    setDescription('');
-    setPriority('Medium');
-    setCategory('');
-    setAssignedTo('');
+      // Add the created ticket to tickets list state
+      setTickets((prev) => [response.data, ...prev]);
+
+      // Reset form fields
+      setTitle('');
+      setDescription('');
+      setPriority('Medium');
+      setCategory('');
+      setAssignedTo('');
+    } catch (error) {
+      alert('Failed to create ticket');
+    }
   };
 
   const inputStyle = {

@@ -29,7 +29,6 @@ const Tickets = () => {
   return (
     <div className="container mx-auto p-6">
       <TicketCreationForm
-        tickets={tickets}
         setTickets={setTickets}
         editingTicket={editingTicket}
         setEditingTicket={setEditingTicket}
