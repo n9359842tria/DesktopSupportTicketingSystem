@@ -27,17 +27,23 @@ const addTicket = async (req, res) => {
 };
 
 const updateTicket = async (req, res) => {
-  const { title, description, priority, category, assignedTo, status } = req.body;
   try {
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
 
-    ticket.title = title || ticket.title;
-    ticket.description = description || ticket.description;
-    ticket.priority = priority || ticket.priority;
-    ticket.category = category || ticket.category;
-    ticket.assignedTo = assignedTo || ticket.assignedTo;
-    ticket.status = status || ticket.status; // e.g. 'open', 'in progress', 'closed'
+    // Authorization check
+    if (ticket.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this ticket' });
+    }
+
+    const { title, description, priority, category, assignedTo, status } = req.body;
+
+    ticket.title = title ?? ticket.title;
+    ticket.description = description ?? ticket.description;
+    ticket.priority = priority ?? ticket.priority;
+    ticket.category = category ?? ticket.category;
+    ticket.assignedTo = assignedTo ?? ticket.assignedTo;
+    ticket.status = status ?? ticket.status;
 
     const updatedTicket = await ticket.save();
     res.json(updatedTicket);
