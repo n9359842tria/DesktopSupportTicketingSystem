@@ -11,6 +11,6 @@ const Tickets = () => {
       <TicketCreationForm editingTicket={editingTicket} setEditingTicket={setEditingTicket} />
     </div>
   );
-}rhrh
+}
 
 export default Tickets;
