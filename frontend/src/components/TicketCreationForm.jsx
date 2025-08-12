@@ -25,7 +25,7 @@ const TicketCreationForm = ({ setTickets }) => {
       };
 
       await axiosInstance.post('/api/tickets', newTicket, {
-        headers: { Authorization: `Bearer ${user.token}` },
+        headers: { Authorization: `Bearer ${user.token}` }, // fixed string template here
       });
 
       setSuccessMsg('Ticket created successfully! You can see it in My Tickets.');
@@ -42,7 +42,11 @@ const TicketCreationForm = ({ setTickets }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto my-5 p-4 border rounded shadow-sm bg-light" style={{ maxWidth: '600px' }}>
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto my-5 p-4 border rounded shadow-sm bg-light"
+      style={{ maxWidth: '600px' }}
+    >
       <h2 className="text-center mb-4">Create a New Ticket</h2>
 
       {successMsg && (
@@ -103,14 +107,32 @@ const TicketCreationForm = ({ setTickets }) => {
         <label htmlFor="category" className="form-label fw-semibold">
           Category:
         </label>
-        <input
+        <select
           id="category"
-          type="text"
-          className="form-control"
+          className="form-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          placeholder="e.g. Software, Hardware"
-        />
+          required
+        >
+          <option value="" disabled>
+            Select a category
+          </option>
+
+          <optgroup label="Hardware">
+            <option value="laptop/desktop">Laptop/Desktop</option>
+            <option value="peripherals">Peripherals (mouse/keyboard)</option>
+            <option value="desk">Desk</option>
+            <option value="ancillaries">Ancillaries (power cable, video cable, etc.)</option>
+          </optgroup>
+
+          <optgroup label="Software">
+            <option value="m365">M365 (Outlook, Teams, etc.)</option>
+            <option value="canva">Canva</option>
+            <option value="slack">Slack</option>
+            <option value="qut_portal">QUT Portal</option>
+            <option value="estudent">eStudent</option>
+          </optgroup>
+        </select>
       </div>
 
       <div className="mb-4">
