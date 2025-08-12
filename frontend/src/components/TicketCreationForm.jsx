@@ -91,10 +91,11 @@ const TicketCreationForm = ({ setTickets }) => {
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
         >
-          <option>Low</option>
-          <option>Medium</option>
-          <option>High</option>
-          <option>Critical</option>
+          <option>P1 Critical</option>
+          <option>P2 High</option>
+          <option>P3 Moderate</option>
+          <option>P4 Low</option>
+          <option>P5 Informational</option>
         </select>
       </div>
 
