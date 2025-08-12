@@ -93,6 +93,7 @@ router.patch('/:ticketId/status', protect, async (req, res) => {
       if (oldStatus === 'Open' && newStatus === 'In Progress') {
         // When moving from Open to In Progress, set resolutionDueAt
         ticket.resolutionDueAt = new Date(now.getTime() + (slaTimes.resolution[ticket.priority] || slaTimes.resolution['P3 Moderate']));
+        console.log('Setting resolutionDueAt:', ticket.resolutionDueAt);
       }
 
       ticket.status = newStatus;
@@ -100,6 +101,7 @@ router.patch('/:ticketId/status', protect, async (req, res) => {
     }
 
     const updatedTicket = await ticket.save();
+    console.log('Updated Ticket:', updatedTicket);
 
     res.json(updatedTicket);
   } catch (error) {
