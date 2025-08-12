@@ -7,7 +7,7 @@ const TicketCreationForm = ({ setTickets }) => {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('Medium');
+  const [priority, setPriority] = useState('P3 Moderate');
   const [category, setCategory] = useState('');
   const [assignedTo, setAssignedTo] = useState('');
   const [successMsg, setSuccessMsg] = useState('');

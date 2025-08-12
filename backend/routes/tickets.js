@@ -35,6 +35,7 @@ router.get('/', protect, async (req, res) => {
 // POST /api/tickets - create new ticket
 router.post('/', protect, async (req, res) => {
   try {
+    console.log('Create ticket request body:', req.body);
     const { title, description, priority, category, assignedTo } = req.body;
 
     const ticket = new Ticket({
