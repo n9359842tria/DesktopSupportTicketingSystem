@@ -1,17 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
-const { protect } = require('../middleware/authMiddleware'); // adjust path if needed
-
-console.log('Ticket model:', Ticket);
+const { protect } = require('../middleware/authMiddleware');
 
 // GET /api/tickets - get tickets created by logged-in user
 router.get('/', protect, async (req, res) => {
   try {
-    // req.user is the full user document without password
-    const userId = req.user._id;
-    console.log(userId);
-    const tickets = await Ticket.find({ createdBy: userId }).sort({ createdAt: -1 });
+    const tickets = await Ticket.find({ createdBy: req.user._id }).sort({ createdAt: -1 });
     res.json(tickets);
   } catch (error) {
     console.error('Error fetching tickets:', error);
@@ -23,7 +18,6 @@ router.get('/', protect, async (req, res) => {
 router.post('/', protect, async (req, res) => {
   try {
     const { title, description, priority, category, assignedTo } = req.body;
-    console.log(title);
 
     const ticket = new Ticket({
       title,
@@ -42,23 +36,24 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// PATCH /api/tickets/:id/status - update ticket status
-router.patch('/:id/status', protect, async (req, res) => {
+// PATCH /api/tickets/:ticketId/status - update ticket status
+router.patch('/:ticketId/status', protect, async (req, res) => {
   try {
-    const ticket = await Ticket.findById(req.params.id);
-    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
-
-    // Authorization check: only owner can update
-    if (ticket.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to update this ticket' });
-    }
-
+    const { ticketId } = req.params;
     const { status } = req.body;
-    if (!status) return res.status(400).json({ message: 'Status is required' });
+
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
 
     const allowedStatuses = ['Open', 'In Progress', 'Completed', 'Closed'];
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    const ticket = await Ticket.findOne({ _id: ticketId, createdBy: req.user._id });
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket not found or not authorized' });
     }
 
     ticket.status = status;
