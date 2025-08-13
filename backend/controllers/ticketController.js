@@ -2,7 +2,26 @@ const Ticket = require('../models/Ticket');
 
 const getTickets = async (req, res) => {
   try {
-    const tickets = await Ticket.find({ userId: req.user.id });
+    const { search } = req.query;
+    let query = { userId: req.user.id };
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i'); // case-insensitive partial match
+
+      query = {
+        ...query,
+        $or: [
+          { title: searchRegex },
+          { description: searchRegex },
+          { priority: searchRegex },
+          { category: searchRegex },
+          { assignedTo: searchRegex },
+        ],
+      };
+    }
+
+    const tickets = await Ticket.find(query);
+
     res.json(tickets);
   } catch (error) {
     res.status(500).json({ message: error.message });

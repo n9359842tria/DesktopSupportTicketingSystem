@@ -18,31 +18,50 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Register</h1>
-        <input
-          type="text"
-          placeholder="Name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
+    <div className="container mt-5" style={{ maxWidth: '480px' }}>
+      <form onSubmit={handleSubmit} className="bg-white p-4 shadow rounded">
+        <h1 className="text-center mb-4">Register</h1>
+
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label fw-semibold">Name</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label fw-semibold">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="password" className="form-label fw-semibold">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-success w-100">
           Register
         </button>
       </form>

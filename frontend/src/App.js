@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Tickets from './pages/Tickets';
+import MyTickets from './pages/MyTickets';  
+import SearchResults from './pages/SearchResults';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/tickets" element={<Tickets />} />
+         <Route path="/mytickets" element={<MyTickets />} />
+         <Route path="/search" element={<SearchResults />} />
       </Routes>
     </Router>
   );

@@ -20,24 +20,37 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+    <div className="container" style={{ maxWidth: '400px', marginTop: '5rem' }}>
+      <form onSubmit={handleSubmit} className="bg-light p-4 rounded shadow">
+        <h1 className="text-center mb-4 fw-bold">Login</h1>
+
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label fw-semibold">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="password" className="form-label fw-semibold">Password</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary w-100">
           Login
         </button>
       </form>
