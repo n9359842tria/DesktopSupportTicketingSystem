@@ -44,7 +44,6 @@ describe('AddTask Function Test', () => {
     expect(res.json.calledWith(createdTask)).to.be.true;
 
     // Restore stubbed methods
-=======
 const mongoose = require('mongoose');
 const sinon = require('sinon');
 const Ticket = require('../models/Ticket');
@@ -169,7 +168,6 @@ describe('Update Function Test', () => {
 
     expect(res.status.calledWith(404)).to.be.true;
     expect(res.json.calledWith({ message: 'Task not found' })).to.be.true;
-=======
     const createStub = sinon.stub(Ticket, 'create').throws(new Error('DB Error'));
 
     const req = {
@@ -257,7 +255,6 @@ describe('UpdateTicket Function Test', () => {
 
     expect(res.status.calledWith(500)).to.be.true;
     expect(res.json.called).to.be.true;
-=======
   it('should return 403 if user is not authorized', async () => {
     const ticket = {
       _id: new mongoose.Types.ObjectId(),
@@ -319,7 +316,6 @@ describe('GetTask Function Test', () => {
     expect(res.status.called).to.be.false; // No error status should be set
 
     // Restore stubbed methods
-=======
   it('should return 500 on error', async () => {
     const findByIdStub = sinon.stub(Ticket, 'findById').throws(new Error('DB Error'));
 
@@ -436,7 +432,6 @@ describe('DeleteTask Function Test', () => {
     expect(res.json.calledWith({ message: 'Task not found' })).to.be.true;
 
     // Restore stubbed methods
-=======
     const findStub = sinon.stub(Ticket, 'find').throws(new Error('DB Error'));
 
     const req = { user: { id: new mongoose.Types.ObjectId() } };
@@ -508,7 +503,6 @@ describe('DeleteTicket Function Test', () => {
     findByIdStub.restore();
   });
 
-=======
     const findByIdStub = sinon.stub(Ticket, 'findById').throws(new Error('DB Error'));
 
     const req = { params: { id: new mongoose.Types.ObjectId().toString() } };
