@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosConfig'; // adjust if needed
 
 // Helper to get remaining time string like "1d 3h 5m 12s"
 const getRemainingTime = (targetDate) => {
@@ -16,7 +17,6 @@ const getRemainingTime = (targetDate) => {
 };
 
 // CountdownTimer component declared first and used below
-//test
 const CountdownTimer = ({ targetDate }) => {
   const [remaining, setRemaining] = useState(getRemainingTime(targetDate));
 
@@ -37,19 +37,32 @@ const CountdownTimer = ({ targetDate }) => {
   );
 };
 
-const TicketList = ({ tickets, onStatusChange }) => {
+const TicketList = ({ tickets, onStatusChange, user, setTickets }) => {
   if (!tickets || tickets.length === 0) {
     return <p style={{ textAlign: 'center', marginTop: '40px' }}>No tickets found.</p>;
   }
 
   const statuses = ['Open', 'In Progress', 'Completed', 'Closed'];
 
+  const handleDeleteTicket = async (ticketId) => {
+    try {
+      await axiosInstance.delete(`/api/tickets/${ticketId}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+
+      setTickets((prevTickets) =>
+        prevTickets.filter((ticket) => ticket._id !== ticketId)
+      );
+    } catch (error) {
+      alert('Failed to delete ticket.');
+    }
+  };
+
   return (
     <div style={{ maxWidth: '800px', margin: '40px auto' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>My Tickets</h2>
       <ul style={{ listStyleType: 'none', padding: 0 }}>
         {tickets.map((ticket) => {
-          // Determine whether to show response or resolution countdown
           const showResponseDue = ticket.status === 'Open' && ticket.responseDueAt;
           const showResolutionDue = ticket.status === 'In Progress' && ticket.resolutionDueAt;
 
@@ -69,11 +82,11 @@ const TicketList = ({ tickets, onStatusChange }) => {
                 <strong>Title:</strong> <span>{ticket.title}</span>
               </p>
               <p style={{ marginBottom: '6px' }}>
-              <strong>Created:</strong>{' '}
-              {ticket.createdAt
-                ? new Date(ticket.createdAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })
-                : 'N/A'}
-            </p>
+                <strong>Created:</strong>{' '}
+                {ticket.createdAt
+                  ? new Date(ticket.createdAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })
+                  : 'N/A'}
+              </p>
               <p style={{ marginBottom: '6px' }}>
                 <strong>Priority:</strong> <span>{ticket.priority}</span>
               </p>
@@ -88,28 +101,26 @@ const TicketList = ({ tickets, onStatusChange }) => {
               </p>
 
               <p style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <strong>Status:</strong>
-              <select
-                value={ticket.status || 'Open'}
-                onChange={(e) => onStatusChange(ticket._id, e.target.value)}
-              >
-                {statuses.map((status) => (
-                 <option key={status} value={status}>
-                  {status}
-              </option>
-              ))}
-            </select>
+                <strong>Status:</strong>
+                <select
+                  value={ticket.status || 'Open'}
+                  onChange={(e) => onStatusChange(ticket._id, e.target.value)}
+                >
+                  {statuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
 
-              {/* Show countdown timer inline next to dropdown when status is Open or In Progress */}
-              {ticket.status === 'Open' && ticket.responseDueAt && (
-               <CountdownTimer targetDate={ticket.responseDueAt} />
-              )}
-              {ticket.status === 'In Progress' && ticket.resolutionDueAt && (
-               <CountdownTimer targetDate={ticket.resolutionDueAt} />
-              )}
+                {ticket.status === 'Open' && ticket.responseDueAt && (
+                  <CountdownTimer targetDate={ticket.responseDueAt} />
+                )}
+                {ticket.status === 'In Progress' && ticket.resolutionDueAt && (
+                  <CountdownTimer targetDate={ticket.resolutionDueAt} />
+                )}
               </p>
 
-              {/* Show countdown timers only when status is Open or In Progress */}
               {showResponseDue && (
                 <p>
                   <strong>Time until Response Due:</strong>{' '}
@@ -124,7 +135,24 @@ const TicketList = ({ tickets, onStatusChange }) => {
                 </p>
               )}
 
-              {/* Remove SLA info for Completed or Closed tickets */}
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this ticket?')) {
+                    handleDeleteTicket(ticket._id);
+                  }
+                }}
+                style={{
+                  marginTop: '10px',
+                  backgroundColor: 'red',
+                  color: 'white',
+                  padding: '8px 12px',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Delete Ticket
+              </button>
             </li>
           );
         })}
