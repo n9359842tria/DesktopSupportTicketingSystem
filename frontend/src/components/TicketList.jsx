@@ -16,6 +16,7 @@ const getRemainingTime = (targetDate) => {
 };
 
 // CountdownTimer component declared first and used below
+//test
 const CountdownTimer = ({ targetDate }) => {
   const [remaining, setRemaining] = useState(getRemainingTime(targetDate));
 
