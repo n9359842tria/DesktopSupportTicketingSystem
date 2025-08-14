@@ -44,7 +44,6 @@ describe('AddTask Function Test', () => {
     expect(res.json.calledWith(createdTask)).to.be.true;
 
     // Restore stubbed methods
-=======
 const mongoose = require('mongoose');
 const sinon = require('sinon');
 const Ticket = require('../models/Ticket');
