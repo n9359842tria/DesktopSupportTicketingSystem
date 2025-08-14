@@ -6,18 +6,18 @@ const { protect } = require('../middleware/authMiddleware');
 // Helper to get SLA times in ms based on priority
 const slaTimes = {
   response: {
-    'P1 Critical': 15 * 60 * 1000,       // 15 minutes
-    'P2 High': 60 * 60 * 1000,           // 1 hour
-    'P3 Moderate': 4 * 60 * 60 * 1000,   // 4 hours
-    'P4 Low': 24 * 60 * 60 * 1000,       // 1 business day
-    'P5 Informational': 2 * 24 * 60 * 60 * 1000, // 2 business days
+    'P1 Critical': 15 * 60 * 1000,
+    'P2 High': 60 * 60 * 1000,
+    'P3 Moderate': 4 * 60 * 60 * 1000,
+    'P4 Low': 24 * 60 * 60 * 1000,
+    'P5 Informational': 2 * 24 * 60 * 60 * 1000,
   },
   resolution: {
-    'P1 Critical': 4 * 60 * 60 * 1000,    // 4 hours
-    'P2 High': 24 * 60 * 60 * 1000,       // 1 business day
-    'P3 Moderate': 3 * 24 * 60 * 60 * 1000, // 3 business days
-    'P4 Low': 5 * 24 * 60 * 60 * 1000,    // 5 business days
-    'P5 Informational': 10 * 24 * 60 * 60 * 1000, // 10 business days
+    'P1 Critical': 4 * 60 * 60 * 1000,
+    'P2 High': 24 * 60 * 60 * 1000,
+    'P3 Moderate': 3 * 24 * 60 * 60 * 1000,
+    'P4 Low': 5 * 24 * 60 * 60 * 1000,
+    'P5 Informational': 10 * 24 * 60 * 60 * 1000,
   }
 };
 
@@ -82,16 +82,13 @@ router.patch('/:ticketId/status', protect, async (req, res) => {
     const oldStatus = ticket.status;
     const now = new Date();
 
-    // Update SLA fields based on status change
     if (oldStatus !== newStatus) {
       if (newStatus === 'Open') {
-        // When status is Open, reset responseDueAt and clear resolutionDueAt
         ticket.responseDueAt = new Date(now.getTime() + (slaTimes.response[ticket.priority] || slaTimes.response['P3 Moderate']));
         ticket.resolutionDueAt = null;
       }
 
       if (oldStatus === 'Open' && newStatus === 'In Progress') {
-        // When moving from Open to In Progress, set resolutionDueAt
         ticket.resolutionDueAt = new Date(now.getTime() + (slaTimes.resolution[ticket.priority] || slaTimes.resolution['P3 Moderate']));
         console.log('Setting resolutionDueAt:', ticket.resolutionDueAt);
       }
@@ -107,6 +104,24 @@ router.patch('/:ticketId/status', protect, async (req, res) => {
   } catch (error) {
     console.error('Error updating ticket status:', error);
     res.status(500).json({ message: 'Server error updating ticket status' });
+  }
+});
+
+// DELETE /api/tickets/:ticketId - delete ticket
+router.delete('/:ticketId', protect, async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const ticket = await Ticket.findOne({ _id: ticketId, createdBy: req.user._id });
+
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket not found or not authorized' });
+    }
+
+    await ticket.deleteOne();
+    res.status(200).json({ message: 'Ticket deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting ticket:', error);
+    res.status(500).json({ message: 'Error deleting ticket', error: error.message });
   }
 });
 
