@@ -3,7 +3,7 @@ const Ticket = require('../models/Ticket');
 // GET /api/tickets - get all tickets for logged-in user
 const getTickets = async (req, res) => {
   try {
-    const tickets = await Ticket.find({ userId: req.user.id });
+    const tickets = await Ticket.find({ createdBy: req.user.id });
     res.json(tickets);
   } catch (error) {
     console.error('Error fetching tickets:', error);
@@ -16,7 +16,7 @@ const addTicket = async (req, res) => {
   const { title, description, priority, category, assignedTo } = req.body;
   try {
     const ticket = await Ticket.create({
-      userId: req.user.id,
+      createdBy: req.user.id,
       title,
       description,
       priority,
@@ -24,7 +24,7 @@ const addTicket = async (req, res) => {
       assignedTo,
       status: 'Open',
       createdAt: new Date(),
-      updatedAt: new Date()
+      statusUpdatedAt: new Date(),
     });
     res.status(201).json(ticket);
   } catch (error) {
@@ -40,7 +40,7 @@ const updateTicket = async (req, res) => {
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
 
     // Authorization check
-    if (ticket.userId.toString() !== req.user.id) {
+    if (ticket.createdBy.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized to update this ticket' });
     }
 
@@ -52,7 +52,7 @@ const updateTicket = async (req, res) => {
     ticket.category = category ?? ticket.category;
     ticket.assignedTo = assignedTo ?? ticket.assignedTo;
     ticket.status = status ?? ticket.status;
-    ticket.updatedAt = new Date();
+    ticket.statusUpdatedAt = new Date();
 
     const updatedTicket = await ticket.save();
     res.json(updatedTicket);
@@ -69,7 +69,7 @@ const deleteTicket = async (req, res) => {
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
 
     // Authorization check: only creator can delete
-    if (ticket.userId.toString() !== req.user.id) {
+    if (ticket.createdBy.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized to delete this ticket' });
     }
 
