@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+    - name: Set CI environment variable to false
+      run: echo "CI=false" >> $GITHUB_ENV
 
     # Set up Node.js
     - name: Setup Node.js
@@ -48,6 +50,7 @@ jobs:
        npm install --global yarn
        yarn --version
        yarn install
+       pm2 delete all || true
       
     # Install dependencies for frontend
     - name: Install Frontend Dependencies
