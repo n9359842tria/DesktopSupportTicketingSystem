@@ -12,9 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/tickets', require('./routes/tickets'));
-
-module.exports = app
+app.use('/api/tickets', require('./routes/Tickets'));
 
 // Export the app object for testing
 if (require.main === module) {
@@ -24,7 +22,5 @@ if (require.main === module) {
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   }
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something broke!', error: err.message });
-});
+
+module.exports = app
