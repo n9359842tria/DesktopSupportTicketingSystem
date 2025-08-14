@@ -52,7 +52,12 @@ const MyTickets = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">My Tickets</h1>
-      <TicketList tickets={tickets} onStatusChange={handleStatusChange} />
+      <TicketList
+        tickets={tickets}
+        onStatusChange={handleStatusChange}
+        user={user}
+        setTickets={setTickets}
+      />
     </div>
   );
 };
